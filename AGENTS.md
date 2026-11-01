@@ -1,26 +1,26 @@
 # Day.js
 
-Day.js is an immutable JavaScript date library with a Moment-compatible API.
-Keep optional features in plugins.
+Day.js is a JavaScript date library with a Moment-compatible API. Its date objects
+are immutable, and extra features go in plugins.
 
-## Code map
+## Where things live
 
-- `src/index.js`: factory and `Dayjs` class; `src/utils.js` and `src/constant.js`:
-  shared helpers and units.
-- `src/plugin/<name>/index.js`: features registered through `dayjs.extend`.
-  `src/locale/`: locale definitions.
-- `test/`: Jest tests; plugin cases live in `test/plugin/<name>.test.js`.
-- `types/`: public declarations; update these when signatures change.
-  `build/`: editable Rollup/Babel scripts.
+- `src/index.js` holds the factory and `Dayjs` class. Helpers and units live in
+  `src/utils.js` and `src/constant.js`.
+- Plugins live in `src/plugin/<name>/index.js` and load through `dayjs.extend`.
+  Locales live in `src/locale/`.
+- Tests go in `test/`; plugin tests use `test/plugin/<name>.test.js`.
+- `types/` holds public declarations. Update them if signatures change.
+  `build/` holds the Rollup/Babel scripts.
 
-## Commands
+## Running it
 
-Run from the root. Install with `npm ci`; CI uses Node LTS.
+Run these from the repo root. Start with `npm ci`; CI uses Node LTS.
 
 ```sh
-npm test                      # timezone matrix, then full suite + 100% line gate
+npm test                      # timezone checks, then full suite + 100% line coverage
 npm run lint
-# Focused check: substitute the relevant test file
+# For one plugin, swap in its test file
 ./node_modules/.bin/jest test/plugin/isLeapYear.test.js --runInBand --coverage=false
 # All tests without the matrix or coverage gate
 ./node_modules/.bin/jest --runInBand --coverage=false
@@ -29,18 +29,17 @@ npm run babel                 # ESM
 node -e "console.log(require('./dayjs.min.js')('2024-02-29').format('YYYY-MM-DD'))"
 ```
 
-This is a library: no `npm start`. If `npm test` stops early, report which stages
-ran and check skipped stages from `package.json` separately. Date/timezone failures
-can depend on the current date, host timezone and Node version; record those
-before attributing failures to your change.
+There's no `npm start` here. If `npm test` stops early, say what ran and run the
+skipped stages from `package.json` separately. Record the date, host timezone and
+Node version before blaming a failure on your change; they can affect date tests.
 
-## Conventions and boundaries
+## A few things to watch
 
-- Follow adjacent ES-module code and `.eslintrc.json`. Plugin tests import from
+- Match nearby ES-module code and `.eslintrc.json`. Plugin tests import from
   `../../src`, register the source plugin, and use Jest 22 `test`/`it` and `expect`.
-- Use fixed dates; reset `MockDate` after use. Check that receivers and supplied
-  date instances remain unchanged.
-- Edit `src/` and `types/`, not generated root-level `plugin/`, `locale/`, `esm/`,
-  `dayjs.min.js`, `index.d.ts` or `locale.json`.
-- Preserve `package-lock.json` unless changing dependencies. `npm run prettier`
-  rewrites documentation, not JavaScript.
+- Use fixed dates and reset `MockDate` afterward. Check that calls leave the
+  original date and any date arguments unchanged.
+- Work in `src/` and `types/`. The root `plugin/`, `locale/`, `esm/`,
+  `dayjs.min.js`, `index.d.ts` and `locale.json` are generated.
+- Leave `package-lock.json` alone unless you're changing dependencies.
+  `npm run prettier` only formats docs.
