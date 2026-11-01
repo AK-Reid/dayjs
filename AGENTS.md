@@ -56,7 +56,8 @@ current date. Compare failures with the unchanged baseline before fixing them.
   before using newer test helpers. Match the existing plugin name and test path.
 - Use fixed dates for edge cases. Existing tests often compare with Moment and
   reset `MockDate` after use. Preserve instance immutability; test the original
-  value as well as the result when changing date manipulation.
+  value as well as the result when changing date manipulation. For queries such
+  as `isBetween`, verify that the receiver and supplied date bounds stay unchanged.
 - Prototype methods that use `this` need ordinary functions, not arrows.
   Reuse the core's helpers/unit normalization instead of adding a second parser.
 

@@ -22,6 +22,36 @@ test('bounds can be swapped with inclusivity', () => {
   expect(dayjs('2018-01-01').isBetween(dayjs('2018-01-01'), dayjs('2017-12-31'), null, '[]')).toBeTruthy()
 })
 
+test('reversed bounds with [) include the first bound and exclude the second', () => {
+  const firstBound = dayjs('2018-01-02')
+  const secondBound = dayjs('2017-12-31')
+  const interior = dayjs('2018-01-01')
+  const originals = [firstBound.valueOf(), secondBound.valueOf(), interior.valueOf()]
+
+  expect(firstBound.isBetween(firstBound, secondBound, null, '[)')).toBe(true)
+  expect(secondBound.isBetween(firstBound, secondBound, null, '[)')).toBe(false)
+  expect(interior.isBetween(firstBound, secondBound, null, '[)')).toBe(true)
+
+  expect(firstBound.valueOf()).toBe(originals[0])
+  expect(secondBound.valueOf()).toBe(originals[1])
+  expect(interior.valueOf()).toBe(originals[2])
+})
+
+test('reversed bounds with (] exclude the first bound and include the second', () => {
+  const firstBound = dayjs('2018-01-02')
+  const secondBound = dayjs('2017-12-31')
+  const interior = dayjs('2018-01-01')
+  const originals = [firstBound.valueOf(), secondBound.valueOf(), interior.valueOf()]
+
+  expect(firstBound.isBetween(firstBound, secondBound, null, '(]')).toBe(false)
+  expect(secondBound.isBetween(firstBound, secondBound, null, '(]')).toBe(true)
+  expect(interior.isBetween(firstBound, secondBound, null, '(]')).toBe(true)
+
+  expect(firstBound.valueOf()).toBe(originals[0])
+  expect(secondBound.valueOf()).toBe(originals[1])
+  expect(interior.valueOf()).toBe(originals[2])
+})
+
 test('is between without units', () => {
   const m = dayjs(new Date(2011, 3, 2, 3, 4, 5, 10))
   const mCopy = dayjs(m)
