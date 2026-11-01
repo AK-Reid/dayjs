@@ -1,4 +1,4 @@
-# Day.js
+# What is Day.js?
 
 Day.js is a JavaScript date library with a Moment-compatible API. Its date objects
 are immutable, and extra features go in plugins.
